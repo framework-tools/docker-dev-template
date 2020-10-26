@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$ENV" = "dev" ]; then
+    rollup -c -w &
+    nodemon index.js
+else
+    node index.js
+fi

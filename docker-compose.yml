@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+    frontend:
+        build: frontend
+        container_name: gsm-frontend
+        environment:
+            - ENV=dev
+        networks:
+            default:
+                aliases:
+                    - gsm.test
+        volumes:
+            - "./frontend:/gsm"
+    backend:
+        build: backend
+        container_name: gsm-backend
+        networks:
+            default:
+                aliases:
+                    - api.gsm.test
+    database:
+        image: 'mongo'
+        container_name: gsm-database
+        hostname: gsm-database
+        environment:
+            - MONGO_INITDB_DATABASE=gsm-database
+        volumes:
+            - ./data/mongo/mongo-volume:/data/database
+            - ./data/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+        ports:
+            - '27017'
+networks:
+    default:
+        external: true
+        name: 'development'

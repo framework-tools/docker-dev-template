@@ -1,0 +1,11 @@
+kind: Service
+
+apiVersion: v1
+metadata:
+    name: frontend-framework
+spec:
+    selector:
+        app: frontend-framework
+    ports:
+        - port: 80
+    type: LoadBalancer

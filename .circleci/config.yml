@@ -1,0 +1,60 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+    aws-cli: circleci/aws-cli@1.3.0
+
+jobs:
+    build:
+        working_directory: /workspace
+        docker:
+            # - image: circleci/node:14
+            - image: frameworktools/ci:latest
+        steps:
+            - checkout
+            - setup_remote_docker
+            - run:
+                name: Create env.js file
+                command: node ./frontend/create-env.js
+            - run:
+                name: Build application Docker image
+                command: docker build -t frontend ./frontend
+            - run:
+                name: Save Docker Image Across Workspace
+                command: docker save -o /workspace/frontend.tar frontend
+            - persist_to_workspace:
+                root: /workspace
+                paths:
+                    - frontend.tar
+            # - run:
+            #     name: Run tests
+            #     command: |
+            #         docker-compose -f ./docker-compose.test.yml up
+            # - persist_to_workspace:
+            #     root: /app
+
+    deploy:
+        executor: aws-cli/default
+        steps:
+            - aws-cli/setup
+            - setup_remote_docker
+            - attach_workspace:
+                at: /tmp/workspace
+            - run:
+                name: 'Load Docker Image'
+                command: docker load -i /tmp/workspace/frontend.tar
+            - deploy:
+                name: Push application Docker image
+                command: |
+                    aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin ${ECR_ENDPOINT}
+                    docker tag frontend:latest "${ECR_ENDPOINT}/framework/frontend:latest"
+                    docker push "${ECR_ENDPOINT}/framework/frontend:latest"
+workflows:
+    build-and-deploy:
+        jobs:
+            - build
+            - deploy:
+                context:
+                    - AWS Context
+                requires:
+                    - build

@@ -1,0 +1,41 @@
+{
+  "name": "framework",
+  "version": "0.0.1",
+  "description": "Framework.tools application",
+  "main": "index.js",
+  "type": "module",
+  "nodemonConfig": {
+    "ignore": [
+      "public"
+    ]
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "rollup -c -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js,.svelte --fix"
+  },
+  "author": "Framework.tools",
+  "dependencies": {
+    "@rollup/plugin-alias": "^3.1.1",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-compress": "^5.0.1",
+    "koa-cookie": "^1.0.0",
+    "koa-mount": "^4.0.0",
+    "koa-router": "^9.4.0",
+    "koa-static": "^5.0.0",
+    "lightning-router": "0.0.2",
+    "path-parser": "^6.1.0",
+    "postcss": "^7.0.32",
+    "rollup": "^2.26.5",
+    "rollup-plugin-hot": "^0.1.0",
+    "rollup-plugin-svelte": "^5.2.3",
+    "rollup-plugin-svelte-hot": "^0.10.0",
+    "stylus": "^0.54.8",
+    "svelte": "git+https://github.com/framework-tools/svelte.git",
+    "svelte-material-icons": "^1.0.3",
+    "svelte-preprocess": "^4.3.0"
+  }
+}

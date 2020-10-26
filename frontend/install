@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$ENV" = "dev" ]; then 
+    npm i -g nodemon
+else
+    true
+fi
